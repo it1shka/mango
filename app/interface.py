@@ -12,6 +12,7 @@ class Interface:
     window: tk.Tk
     url_input: tk.Text
     connect_button: ttk.Button
+    open_browser_button: ttk.Button
 
     def __init__(self) -> None:
         self._build_window()
@@ -30,10 +31,11 @@ class Interface:
         '''
         widget = ttk.Frame(self.window)
         label = ttk.Label(widget, text='Connect to: ')
-        label.pack(side=tk.LEFT)
         self.url_input = tk.Text(widget, height=1)
-        self.url_input.pack(side=tk.LEFT)
         self.connect_button = ttk.Button(widget, text='Connect')
-        self.connect_button.pack(side=tk.LEFT)
-        widget.config(padding=5)
+        self.open_browser_button = ttk.Button(widget, text='Open in browser')
+        children = [label, self.url_input, self.connect_button, self.open_browser_button]
+        for each in children:
+            each.pack(side=tk.LEFT)
+        widget.config(padding=5, borderwidth=1, relief='solid')
         widget.pack(side=tk.TOP, fill='x')
