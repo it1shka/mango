@@ -1,0 +1,4 @@
+dnspython==2.6.1
+jedi==0.19.1
+parso==0.8.4
+pymongo==4.7.3
