@@ -42,6 +42,10 @@ class Controller:
             )
             self._iface.clear_navigation()
 
+    def _handle_navigation_select(self) -> None:
+        '''Handle tree selection of database/collection'''
+        ...
+
     def _update_navigation(self) -> None:
         '''Reads all databases and collections'''
         self._iface.clear_navigation()

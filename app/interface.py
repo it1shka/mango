@@ -77,12 +77,3 @@ class Interface:
         tree = self.navigation_treeview
         for elem in tree.get_children():
             tree.delete(elem)
-
-    @staticmethod
-    def popup(title: str) -> None:
-        '''Replacement of tk.messagebox'''
-        popup = tk.Toplevel()
-        label = ttk.Label(popup, text=title)
-        label.grid()
-        close_button = ttk.Button(popup, text='Close', command=popup.destroy)
-        close_button.grid(row=1)
