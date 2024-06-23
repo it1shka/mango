@@ -6,7 +6,9 @@ from tkinter import ttk
 class Interface:
     '''
     Builds native Tkinter interface
-    and saves elements in class fields
+    and saves elements in class fields.
+    Additionally, contains some helper 
+    functions
     '''
 
     window: tk.Tk
@@ -64,3 +66,23 @@ class Interface:
         widget.config(borderwidth=1, relief='solid')
         # TODO:
         widget.pack(side=tk.RIGHT, fill='both', expand=True)
+
+    # helper functions
+
+    def clear_navigation(self) -> None:
+        '''
+        Traverses all children of navigation
+        and deletes them one by one
+        '''
+        tree = self.navigation_treeview
+        for elem in tree.get_children():
+            tree.delete(elem)
+
+    @staticmethod
+    def popup(title: str) -> None:
+        '''Replacement of tk.messagebox'''
+        popup = tk.Toplevel()
+        label = ttk.Label(popup, text=title)
+        label.grid()
+        close_button = ttk.Button(popup, text='Close', command=popup.destroy)
+        close_button.grid(row=1)

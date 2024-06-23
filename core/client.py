@@ -2,6 +2,9 @@ from __future__ import annotations
 import pymongo
 
 
+CONNECTION_TIMEOUT = 2000
+
+
 class Client:
     '''CRUD operations manager'''
 
@@ -17,10 +20,25 @@ class Client:
         self._client.close()
         self._client = None
 
-    def connect(self, connection_str: str) -> None:
-        '''Connects to MongoDB using connection string'''
+    def connect(self, connection_str: str) -> bool:
+        '''
+        Connects to MongoDB using connection string.
+        If connection was successful, returns True.
+        Otherwise, returns False
+        '''
         self.disconnect()
-        self._client = pymongo.MongoClient(connection_str)
+        try:
+            self._client = pymongo.MongoClient(
+                connection_str,
+                serverSelectionTimeoutMS=CONNECTION_TIMEOUT,
+                socketTimeoutMS=CONNECTION_TIMEOUT,
+            )
+            self._client.server_info()
+            return True
+        except Exception:
+            print('Failed to connect')
+            self.disconnect()
+            return False
 
     def __enter__(self) -> Client:
         '''Used for \'with\' context manager'''

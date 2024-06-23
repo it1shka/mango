@@ -1,5 +1,6 @@
 from __future__ import annotations
 import tkinter as tk
+from tkinter import messagebox
 from core import Client
 from .interface import Interface
 
@@ -30,19 +31,21 @@ class Controller:
         
     def _handle_connect(self) -> None:
         '''Connects to new MongoDB client'''
-        try:
-            dest = self._iface.url_text.get('1.0', tk.END + '-1c')
-            self._client.connect(dest)
-        except Exception:
-            self._client.disconnect()
-        finally:
+        dest = self._iface.url_text.get('1.0', tk.END + '-1c')
+        verdict = self._client.connect(dest)
+        if verdict:
             self._update_navigation()
+        else:
+            messagebox.showerror(
+                title='Connection failure',
+                message='URL is invalid'
+            )
+            self._iface.clear_navigation()
 
     def _update_navigation(self) -> None:
         '''Reads all databases and collections'''
+        self._iface.clear_navigation()
         tree = self._iface.navigation_treeview
-        for row in tree.get_children():
-            tree.delete(row)
         for db_name in self._client.databases:
             db_root = tree.insert('', tk.END, text=db_name)
             for collection_name in self._client.collections(db_name):
