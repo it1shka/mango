@@ -13,10 +13,14 @@ class Interface:
 
     window: tk.Tk
     url_text: tk.Text
+    search_entry: tk.Entry
     connect_button: ttk.Button
     open_browser_button: ttk.Button
     create_database_button: ttk.Button
     create_collection_button: ttk.Button
+    search_button: ttk.Button
+    next_page_button: ttk.Button
+    prev_page_button: ttk.Button
     navigation_treeview: ttk.Treeview
 
     def __init__(self) -> None:
@@ -74,7 +78,22 @@ class Interface:
         '''Builds main view to edit documents'''
         widget = ttk.Frame(self.window)
         widget.config(borderwidth=1, relief='solid')
-        # TODO:
+        search_widget = ttk.Frame(widget, padding=10)
+        search_label = ttk.Label(search_widget, text='Search: ')
+        self.search_entry = ttk.Entry(search_widget)
+        self.search_button = ttk.Button(search_widget, text='Go')
+        self.prev_page_button = ttk.Button(search_widget, text='Prev page')
+        self.next_page_button = ttk.Button(search_widget, text='Next page')
+        left_pack = [
+            search_label,
+            self.search_entry,
+            self.search_button,
+            self.prev_page_button,
+            self.next_page_button
+        ]
+        for each in left_pack:
+            each.pack(side=tk.LEFT)
+        search_widget.pack(side=tk.TOP, fill='x')
         widget.pack(side=tk.RIGHT, fill='both', expand=True)
 
     # helper functions
@@ -101,4 +120,3 @@ class Interface:
                 continue
             self.navigation_treeview.insert(db, tk.END, text=collection)
         return False
-                

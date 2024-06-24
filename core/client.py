@@ -1,8 +1,10 @@
 from __future__ import annotations
 import pymongo
+import json
 
 
 CONNECTION_TIMEOUT = 2000
+PAGE_SIZE = 5
 
 
 class Client:
@@ -122,3 +124,33 @@ class Client:
         except Exception:
             print('Failed to rename the collection')
             return False
+
+    def get_cursor(self, db: str, col: str, search: str) -> pymongo.cursor.Cursor | None:
+        '''Primitive method to get cursor from the given search'''
+        try:
+            database = self._client[db]
+            collection = database.get_collection(col)
+            search = search.strip()
+            query: dict
+            if not search:
+                query = dict()
+            else:
+                query = json.loads(search)
+            cursor = collection.find(query)
+            return cursor
+        except Exception:
+            print('Failed to get the cursor')
+            return None
+
+    def get_page(self, db: str, col: str, search: str, page: int) -> list | None:
+        '''Gets specific page of documents using the search'''
+        try:
+            cursor = self.get_cursor(db, col, search)
+            cursor = cursor.skip(PAGE_SIZE * page).limit(PAGE_SIZE)
+            documents = []
+            for document in cursor:
+                documents.append(document)
+            return documents
+        except Exception:
+            print('Search failed')
+            return None

@@ -15,10 +15,12 @@ class Controller:
 
     _client: Client
     _iface: Interface
+    _page: int
 
     def __init__(self, client: Client, iface: Interface) -> None:
         self._client = client
         self._iface = iface
+        self._page = 0
 
     def start(self) -> None:
         '''Starts the application'''
@@ -32,8 +34,46 @@ class Controller:
         self._iface.create_collection_button.config(command=self._handle_create_collection)
         self._iface.navigation_treeview.bind('<BackSpace>', self._handle_navigation_delete)
         self._iface.navigation_treeview.bind('R', self._handle_rename_collection)
-        # TODO: add rest
+        self._iface.search_button.config(command=self._handle_search)
+        self._iface.prev_page_button.config(command=self._handle_search_prev)
+        self._iface.next_page_button.config(command=self._handle_search_next)
+        # TODO: complete
     
+    def _handle_search_start(self) -> None:
+        '''Starts searching from the first page'''
+        self._page = 0
+        self._handle_search()
+
+    def _handle_search_prev(self) -> None:
+        '''Goes to the previous page and initiates a search'''
+        self._page = max(0, self._page - 1)
+        self._handle_search()
+
+    def _handle_search_next(self) -> None:
+        '''Goes to the next page and initiates a search'''
+        self._page += 1
+        self._handle_search()
+
+    def _handle_search(self) -> None:
+        '''Handles searching for elements with specified page from self._page'''
+        collection = self._iface.navigation_treeview.focus()
+        if not collection:
+            messagebox.showwarning(title='Warning', message='Select a collection first!')
+            return
+        database = self._iface.navigation_treeview.parent(collection)
+        if not database:
+            messagebox.showwarning(title='Warning', message='Select a collection first!')
+            return
+        db = self._iface.navigation_treeview.item(database)['text']
+        col = self._iface.navigation_treeview.item(collection)['text']
+        search = self._iface.search_entry.get()
+        documents = self._client.get_page(db, col, search, page=self._page)
+        if documents is None:
+            messagebox.showerror(title='Failure', message='Failed to search')
+        else:
+            # TODO: ...
+            print(documents)
+
     def _handle_rename_collection(self, event: tk.Event) -> None:
         '''Renames collection'''
         current_id = self._iface.navigation_treeview.focus()
@@ -94,10 +134,6 @@ class Controller:
             )
             return
         self._iface.insert_collection(database_name, collection_name)
-
-    def _handle_navigation_select(self) -> None:
-        '''Handle tree selection of database/collection'''
-        ...
 
     def _handle_navigation_delete(self, event: tk.Event) -> None:
         '''Handles deletion of database/collection'''
