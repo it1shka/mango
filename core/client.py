@@ -70,3 +70,25 @@ class Client:
         if database is None:
             return []
         return database.list_collection_names()
+    
+    def create_database(self, new_db: str, init_collection: str) -> bool:
+        '''Creates new MongoDB database with at least 1 collection'''
+        try:
+            db = self._client[new_db]
+            db.create_collection(init_collection)
+            return True
+        except Exception:
+            print('Failed to create the database')
+            return False
+
+    def create_collection(self, existing_db: str, collection: str) -> bool:
+        '''Creates collection for given database'''
+        try:
+            existing_dbs = self._client.list_database_names()
+            if existing_db not in existing_dbs:
+                return False
+            self._client[existing_db].create_collection(collection)
+            return True
+        except Exception:
+            print('Failed to create the collection')
+            return False

@@ -15,6 +15,8 @@ class Interface:
     url_text: tk.Text
     connect_button: ttk.Button
     open_browser_button: ttk.Button
+    create_database_button: ttk.Button
+    create_collection_button: ttk.Button
     navigation_treeview: ttk.Treeview
 
     def __init__(self) -> None:
@@ -38,8 +40,16 @@ class Interface:
         label = ttk.Label(widget, text='Connect to: ')
         self.url_text = tk.Text(widget, height=1, width=50)
         self.connect_button = ttk.Button(widget, text='Connect')
+        self.create_database_button = ttk.Button(widget, text='Create database')
+        self.create_collection_button = ttk.Button(widget, text='Create collection')
         self.open_browser_button = ttk.Button(widget, text='Open in browser')
-        children = [label, self.url_text, self.connect_button, self.open_browser_button]
+        children = [
+            label, self.url_text, 
+            self.connect_button, 
+            self.create_database_button,
+            self.create_collection_button,
+            self.open_browser_button
+        ]
         for each in children:
             each.pack(side=tk.LEFT)
         widget.config(padding=5, borderwidth=1, relief='solid')
@@ -77,3 +87,8 @@ class Interface:
         tree = self.navigation_treeview
         for elem in tree.get_children():
             tree.delete(elem)
+
+    def insert_new_database(self, db: str, collection: str) -> None:
+        '''Inserts database with one collection'''
+        db_root = self.navigation_treeview.insert('', tk.END, text=db)
+        self.navigation_treeview.insert(db_root, tk.END, text=collection)

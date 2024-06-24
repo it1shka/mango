@@ -1,6 +1,7 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import simpledialog
 from core import Client
 from .interface import Interface
 
@@ -27,6 +28,8 @@ class Controller:
     def _bind_iface(self) -> None:
         '''Attaches listeners to UI elements'''
         self._iface.connect_button.config(command=self._handle_connect)
+        self._iface.create_database_button.config(command=self._handle_create_database)
+        self._iface.create_collection_button.config(command=self._handle_create_collection)
         # TODO: add rest
         
     def _handle_connect(self) -> None:
@@ -41,6 +44,32 @@ class Controller:
                 message='URL is invalid'
             )
             self._iface.clear_navigation()
+
+    def _handle_create_database(self) -> None:
+        '''Creates database + initial collection'''
+        database_name = simpledialog.askstring('Database name', 'Name: ')
+        collection_name = simpledialog.askstring('Collection name', 'Name: ')
+        verdict = self._client.create_database(database_name, collection_name)
+        if not verdict:
+            messagebox.showerror(
+                title='Failure',
+                message='Failed to create database'
+            )
+            return
+        self._iface.insert_new_database(database_name, collection_name)
+
+    def _handle_create_collection(self) -> None:
+        '''Creates collection for a given database'''
+        database_name = simpledialog.askstring('Existing DB name', 'Existing DB: ')
+        collection_name = simpledialog.askstring('New collection', 'New collection name: ')
+        verdict = self._client.create_collection(database_name, collection_name)
+        if not verdict:
+            messagebox.showerror(
+                title='Failure',
+                message='Failed to create collection'
+            )
+            return
+        self._iface.insert_collection(database_name, collection_name)
 
     def _handle_navigation_select(self) -> None:
         '''Handle tree selection of database/collection'''
