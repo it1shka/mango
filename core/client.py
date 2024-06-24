@@ -92,3 +92,22 @@ class Client:
         except Exception:
             print('Failed to create the collection')
             return False
+
+    def delete_database(self, database: str) -> bool:
+        '''Deletes database with given name'''
+        try:
+            self._client.drop_database(database)
+            return True
+        except Exception:
+            print('Failed to delete the database')
+            return False
+
+    def delete_collection(self, parent_db: str, collection: str) -> bool:
+        '''Deletes collection for the specified database'''
+        try:
+            db = self._client[parent_db]
+            db.drop_collection(collection)
+            return True
+        except Exception:
+            print('Failed to delete the collection')
+            return False

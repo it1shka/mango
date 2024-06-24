@@ -92,3 +92,13 @@ class Interface:
         '''Inserts database with one collection'''
         db_root = self.navigation_treeview.insert('', tk.END, text=db)
         self.navigation_treeview.insert(db_root, tk.END, text=collection)
+
+    def insert_collection(self, target_db: str, collection: str) -> bool:
+        '''Inserts a new collection into an existing database'''
+        for db in self.navigation_treeview.get_children():
+            item = self.navigation_treeview.item(db)
+            if item['text'] != target_db:
+                continue
+            self.navigation_treeview.insert(db, tk.END, text=collection)
+        return False
+                

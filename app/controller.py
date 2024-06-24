@@ -30,6 +30,7 @@ class Controller:
         self._iface.connect_button.config(command=self._handle_connect)
         self._iface.create_database_button.config(command=self._handle_create_database)
         self._iface.create_collection_button.config(command=self._handle_create_collection)
+        self._iface.navigation_treeview.bind('<BackSpace>', self._handle_navigation_delete)
         # TODO: add rest
         
     def _handle_connect(self) -> None:
@@ -74,6 +75,30 @@ class Controller:
     def _handle_navigation_select(self) -> None:
         '''Handle tree selection of database/collection'''
         ...
+
+    def _handle_navigation_delete(self, event: tk.Event) -> None:
+        '''Handles deletion of database/collection'''
+        selected = self._iface.navigation_treeview.selection()
+        confirmed = messagebox.askyesno(title='Warning', message='Are you sure?')
+        if not confirmed:
+            return
+        for each in selected:
+            parent = self._iface.navigation_treeview.parent(each)
+            verdict: str
+            if not parent: # database
+                database = self._iface.navigation_treeview.item(each)['text']
+                verdict = self._client.delete_database(database)
+            else: # collection
+                database = self._iface.navigation_treeview.item(parent)['text']
+                collection = self._iface.navigation_treeview.item(each)['text']
+                verdict = self._client.delete_collection(database, collection)
+            if verdict:
+                self._iface.navigation_treeview.delete(each)
+            else:
+                messagebox.showerror(
+                    title='Failure',
+                    message='Failed to delete the item'
+                )
 
     def _update_navigation(self) -> None:
         '''Reads all databases and collections'''
