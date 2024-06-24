@@ -111,3 +111,14 @@ class Client:
         except Exception:
             print('Failed to delete the collection')
             return False
+
+    def rename_collection(self, parent_db: str, collection: str, new_name: str) -> bool:
+        '''Renames collection for the given database'''
+        try:
+            db = self._client[parent_db]
+            collection = db.get_collection(collection)
+            collection.rename(new_name)
+            return True
+        except Exception:
+            print('Failed to rename the collection')
+            return False

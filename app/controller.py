@@ -31,8 +31,31 @@ class Controller:
         self._iface.create_database_button.config(command=self._handle_create_database)
         self._iface.create_collection_button.config(command=self._handle_create_collection)
         self._iface.navigation_treeview.bind('<BackSpace>', self._handle_navigation_delete)
+        self._iface.navigation_treeview.bind('R', self._handle_rename_collection)
         # TODO: add rest
-        
+    
+    def _handle_rename_collection(self, event: tk.Event) -> None:
+        '''Renames collection'''
+        current_id = self._iface.navigation_treeview.focus()
+        if not current_id:
+            return
+        parent = self._iface.navigation_treeview.parent(current_id)
+        if not parent:
+            return
+        database = self._iface.navigation_treeview.item(parent)['text']
+        collection = self._iface.navigation_treeview.item(current_id)['text']
+        new_name = simpledialog.askstring('Collection edit', 'New name: ')
+        if not new_name:
+            return
+        verdict = self._client.rename_collection(database, collection, new_name)
+        if verdict:
+            self._iface.navigation_treeview.item(current_id, text=new_name)
+        else:
+            messagebox.showerror(
+                title='Failure',
+                message='Failed to rename the collection'
+            )
+
     def _handle_connect(self) -> None:
         '''Connects to new MongoDB client'''
         dest = self._iface.url_text.get('1.0', tk.END + '-1c')
