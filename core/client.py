@@ -178,3 +178,19 @@ class Client:
         except Exception:
             print('Failed to delete document')
             return False
+
+    def edit_document(self, db: str, col: str, _id: str, \
+        path: list[str | int], new_value: str | int) -> bool:
+        try:
+            database = self._client[db]
+            collection = database.get_collection(col)
+            doc = collection.find_one({'_id': ObjectId(_id)})
+            current = doc
+            for each in path[:-1]:
+                currect = current[each]
+            current[path[-1]] = new_value
+            collection.update_one({'_id': ObjectId(_id)}, {'$set': doc}, upsert=False)
+            return True
+        except Exception:
+            print('Failed to change document')
+            return False

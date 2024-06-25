@@ -42,8 +42,35 @@ class Controller:
         self._iface.prev_page_button.config(command=self._handle_search_prev)
         self._iface.next_page_button.config(command=self._handle_search_next)
         self._iface.documents_treeview.bind('<BackSpace>', self._handle_delete_document)
+        self._iface.documents_treeview.bind('E', self._handle_edit_field)
         # TODO: complete
     
+    def _handle_edit_field(self, event: tk.Event) -> None:
+        '''
+        Edits the chosen field.
+        TODO: I think it works bad with numbers.
+        TODO: to fix later
+        '''
+        current_id = self._iface.document_id()
+        if not current_id:
+            messagebox.showerror(title='Failure', message='Failed to edit document')
+            return
+        current_path = self._iface.field_chain()
+        if not current_path:
+            messagebox.showerror(title='Failure', message='Failed to edit document')
+            return
+        new_value = simpledialog.askstring(title='Edit document', prompt='New value: ')
+        if not new_value:
+            return
+        if new_value.isnumeric():
+            new_value = int(new_value)
+        verdict = self._client.edit_document(self._database, self._collection, \
+            current_id, current_path, new_value)
+        if not verdict:
+            messagebox.showerror(title='Failure', message='Failed to edit document')
+        else:
+            self._handle_search()
+
     def _handle_delete_document(self, event: tk.Event) -> None:
         '''Deletes chosen document'''
         current_id = self._iface.document_id()
@@ -88,6 +115,7 @@ class Controller:
                 messagebox.showerror(title='Failure', message='Failed to create document')
             else:
                 popup.destroy()
+                self._handle_search()
         button.config(command=_insert)
 
     def _handle_search_start(self) -> None:

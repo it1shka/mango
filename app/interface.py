@@ -181,3 +181,24 @@ class Interface:
             return None
         _, _id = parts
         return _id
+
+    def field_chain(self) -> list[str | int] | None:
+        '''
+        Returns path chain for nested field.
+        Opposite to `path` function from RamdaJS
+        '''
+        current = self.documents_treeview.focus()
+        if not current:
+            return None
+        raw_text = self.documents_treeview.item(current)['text']
+        parts = raw_text.split(': ')
+        if len(parts) < 2:
+            return None
+        path = [parts[0]]
+        while self.documents_treeview.parent(current):
+            current = self.documents_treeview.parent(current)
+            text = self.documents_treeview.item(current)['text']
+            if text == 'Document':
+                return path
+            path.insert(0, text)
+        return path
