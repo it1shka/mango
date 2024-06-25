@@ -17,6 +17,8 @@ class Controller:
     _client: Client
     _iface: Interface
     _page: int
+    _database: str
+    _collection: str
 
     def __init__(self, client: Client, iface: Interface) -> None:
         self._client = client
@@ -39,8 +41,24 @@ class Controller:
         self._iface.search_button.config(command=self._handle_search)
         self._iface.prev_page_button.config(command=self._handle_search_prev)
         self._iface.next_page_button.config(command=self._handle_search_next)
+        self._iface.documents_treeview.bind('<BackSpace>', self._handle_delete_document)
         # TODO: complete
     
+    def _handle_delete_document(self, event: tk.Event) -> None:
+        '''Deletes chosen document'''
+        current_id = self._iface.document_id()
+        if not current_id:
+            messagebox.showerror(title='Failure', message='Failed to delete document')
+            return
+        confirmed = messagebox.askyesno(title='Warning', message='Are you sure?')
+        if not confirmed:
+            return
+        verdict = self._client.delete_document(self._database, self._collection, current_id)
+        if not verdict:
+            messagebox.showerror(title='Failure', message='Failed to delete document')
+        else:
+            self._handle_search()
+
     def _handle_create_document(self) -> None:
         '''Creates new document and inserts into new collection'''
         # copypaste from _handle_search
@@ -104,6 +122,8 @@ class Controller:
         if documents is None:
             messagebox.showerror(title='Failure', message='Failed to search')
         else:
+            self._database = db
+            self._collection = col
             self._iface.insert_documents(documents)
 
     def _handle_rename_collection(self, event: tk.Event) -> None:

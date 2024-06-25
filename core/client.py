@@ -1,6 +1,7 @@
 from __future__ import annotations
 import pymongo
 import json
+from bson import ObjectId
 
 
 CONNECTION_TIMEOUT = 2000
@@ -165,4 +166,15 @@ class Client:
             return True
         except Exception:
             print('Failed to insert document')
+            return False
+
+    def delete_document(self, db: str, col: str, _id: str) -> bool:
+        '''Deletes document by specified ID'''
+        try:
+            database = self._client[db]
+            collection = database.get_collection(col)
+            collection.find_one_and_delete({'_id': ObjectId(_id)})
+            return True
+        except Exception:
+            print('Failed to delete document')
             return False

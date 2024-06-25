@@ -1,6 +1,7 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk
+import json
 
 
 class Interface:
@@ -161,3 +162,22 @@ class Interface:
                 continue
             text = f'{key}: {value}'
             self.documents_treeview.insert(parent, tk.END, text=text)
+
+    def document_id(self) -> str | None:
+        '''
+        Returns ID of the current object if such exists.
+        Else returns None
+        TODO: this method is unreliable, fix it
+        '''
+        root = self.documents_treeview.focus()
+        if not root:
+            return None
+        while self.documents_treeview.parent(root):
+            root = self.documents_treeview.parent(root)
+        first_child = self.documents_treeview.get_children(root)[0]
+        raw_text = self.documents_treeview.item(first_child)['text']
+        parts = raw_text.split(': ')
+        if len(parts) < 2: 
+            return None
+        _, _id = parts
+        return _id
