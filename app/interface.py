@@ -18,6 +18,7 @@ class Interface:
     open_browser_button: ttk.Button
     create_database_button: ttk.Button
     create_collection_button: ttk.Button
+    create_document_button: ttk.Button
     search_button: ttk.Button
     next_page_button: ttk.Button
     prev_page_button: ttk.Button
@@ -47,12 +48,14 @@ class Interface:
         self.connect_button = ttk.Button(widget, text='Connect')
         self.create_database_button = ttk.Button(widget, text='Create database')
         self.create_collection_button = ttk.Button(widget, text='Create collection')
+        self.create_document_button = ttk.Button(widget, text='New document')
         self.open_browser_button = ttk.Button(widget, text='Open in browser')
         children = [
             label, self.url_text, 
             self.connect_button, 
             self.create_database_button,
             self.create_collection_button,
+            self.create_document_button,
             self.open_browser_button
         ]
         for each in children:

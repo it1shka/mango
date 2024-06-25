@@ -2,6 +2,7 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import simpledialog
+from tkinter import ttk
 from core import Client
 from .interface import Interface
 
@@ -32,6 +33,7 @@ class Controller:
         self._iface.connect_button.config(command=self._handle_connect)
         self._iface.create_database_button.config(command=self._handle_create_database)
         self._iface.create_collection_button.config(command=self._handle_create_collection)
+        self._iface.create_document_button.config(command=self._handle_create_document)
         self._iface.navigation_treeview.bind('<BackSpace>', self._handle_navigation_delete)
         self._iface.navigation_treeview.bind('R', self._handle_rename_collection)
         self._iface.search_button.config(command=self._handle_search)
@@ -39,6 +41,37 @@ class Controller:
         self._iface.next_page_button.config(command=self._handle_search_next)
         # TODO: complete
     
+    def _handle_create_document(self) -> None:
+        '''Creates new document and inserts into new collection'''
+        # copypaste from _handle_search
+        collection = self._iface.navigation_treeview.focus()
+        if not collection:
+            messagebox.showwarning(title='Warning', message='Select a collection first!')
+            return
+        database = self._iface.navigation_treeview.parent(collection)
+        if not database:
+            messagebox.showwarning(title='Warning', message='Select a collection first!')
+            return
+        db = self._iface.navigation_treeview.item(database)['text']
+        col = self._iface.navigation_treeview.item(collection)['text']
+        # create a popup with text field
+        popup = tk.Toplevel()
+        label = ttk.Label(popup, text='New document:', padding=10)
+        label.pack(side=tk.TOP, fill='x')
+        button = ttk.Button(popup, text='Insert')
+        button.pack(side=tk.BOTTOM)
+        text_area = tk.Text(popup)
+        text_area.pack(fill='both', expand=True)
+        # setting the handler
+        def _insert() -> None:
+            raw_doc = text_area.get('1.0', tk.END)
+            verdict = self._client.new_document(db, col, raw_doc)
+            if not verdict:
+                messagebox.showerror(title='Failure', message='Failed to create document')
+            else:
+                popup.destroy()
+        button.config(command=_insert)
+
     def _handle_search_start(self) -> None:
         '''Starts searching from the first page'''
         self._page = 0

@@ -154,3 +154,15 @@ class Client:
         except Exception:
             print('Search failed')
             return None
+
+    def new_document(self, db: str, col: str, doc: str) -> bool:
+        '''Inserts a new document'''
+        try:
+            database = self._client[db]
+            collection = database.get_collection(col)
+            data = json.loads(doc)
+            collection.insert_one(data)
+            return True
+        except Exception:
+            print('Failed to insert document')
+            return False
