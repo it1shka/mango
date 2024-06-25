@@ -71,8 +71,7 @@ class Controller:
         if documents is None:
             messagebox.showerror(title='Failure', message='Failed to search')
         else:
-            # TODO: ...
-            print(documents)
+            self._iface.insert_documents(documents)
 
     def _handle_rename_collection(self, event: tk.Event) -> None:
         '''Renames collection'''
