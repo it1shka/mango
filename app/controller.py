@@ -38,7 +38,7 @@ class Controller:
         self._iface.create_document_button.config(command=self._handle_create_document)
         self._iface.navigation_treeview.bind('<BackSpace>', self._handle_navigation_delete)
         self._iface.navigation_treeview.bind('R', self._handle_rename_collection)
-        self._iface.search_button.config(command=self._handle_search)
+        self._iface.search_button.config(command=self._handle_search_start)
         self._iface.prev_page_button.config(command=self._handle_search_prev)
         self._iface.next_page_button.config(command=self._handle_search_next)
         self._iface.documents_treeview.bind('<BackSpace>', self._handle_delete_document)
