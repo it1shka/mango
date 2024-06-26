@@ -6,3 +6,4 @@ native gui application
 
 
 from .client import Client
+from .api import create_api

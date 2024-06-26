@@ -19,7 +19,7 @@ case "$1" in
     pip3 freeze > requirements.txt
     ;;
   "start")
-    python3 main.py
+    python3 main.py "${@:2}"
     ;;
   *)
     echo "Unknown command: $1"

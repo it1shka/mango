@@ -43,7 +43,6 @@ class Controller:
         self._iface.next_page_button.config(command=self._handle_search_next)
         self._iface.documents_treeview.bind('<BackSpace>', self._handle_delete_document)
         self._iface.documents_treeview.bind('E', self._handle_edit_field)
-        # TODO: complete
     
     def _handle_edit_field(self, event: tk.Event) -> None:
         '''
