@@ -6,12 +6,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mango</title>
   <link rel="stylesheet" href="styles.css">
-  <script defer src="//unpkg.com/alpinejs"></script>
 </head>
 
 <body>
-  <h1>Page Title</h1>
-  <script defer src="main.js"></script>
+  <main class="main-container">
+
+    <header x-data="connectionString" class="controls" >
+      <h2>Connect to: </h2>
+      <input x-model="value" placeholder="Connection string" />
+      <button @click="connect">Connect</button>
+      <button @click="$dispatch('database-update')">Refresh</button>
+    </header>
+
+    <aside x-data="databases" @database-update.window="getList" class="navigation">
+      <template x-for="databaseName in list">
+        <div x-data="database(databaseName)" class="database">
+          <div class="header">
+            <button x-text="open ? '-' : '+'" class="toggle" @click="toggle"></button>
+            <p x-text="name"></p>
+          </div>
+          <template x-if="open">
+            <template  x-for="collectionName in collections">
+              <div x-data="collection(collectionName)" class="collection">
+                <p x-text="name"></p>
+              </div>
+            </template>
+          </template>
+        </div>
+      </template>
+    </aside>
+
+  </main>
+
+  <script src="main.js"></script>
+  <script defer src="//unpkg.com/alpinejs"></script>
 </body>
 
 </html>
