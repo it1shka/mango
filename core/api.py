@@ -83,7 +83,7 @@ def create_api(client: Client) -> Flask:
     def handle_collection_rename() -> Any:
         body = request.get_json()
         required_fields = ['database', 'collection', 'name']
-        if any(map(lambda field: field not in body), required_fields):
+        if any(map(lambda field: field not in body, required_fields)):
             return 'Some of the fields are missing', 400
         database = body['database']
         collection = body['collection']

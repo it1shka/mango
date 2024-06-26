@@ -13,7 +13,7 @@ const dispatch = (query, eventName, detail = {}) => {
 
 function main() {
   Alpine.data('connectionString', () => ({
-    value: '',
+    value: 'localhost',
 
     async connect() {
       try {
@@ -80,9 +80,45 @@ function main() {
     },
   }))
 
-  Alpine.data('collection', (name) => ({
+  Alpine.data('collection', (database, name) => ({
+    database,
     name,
-    // TODO: 
+    renaming: false,
+    newName: name,
+
+    async rename() {
+      if (!this.renaming) return
+      if (this.newName === name) {
+        this.renaming = false
+        return
+      }
+      try {
+        const body = JSON.stringify({ 
+          database: this.database,
+          collection: this.name,
+          name: this.newName,
+        })
+        const response = await fetch(apiURL('collection/rename'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body,
+        })
+        if (response.ok) {
+          this.name = this.newName
+          this.renaming = false
+        } else {
+          const message = await response.text()
+          dispatch('.navigation', 'error', message)
+        }
+      } catch {
+        dispatch('.navigation', 'error', 'Failed to rename collection')
+      }
+    },
+
+    cancelRename() {
+      this.newName = this.name
+      this.renaming = false
+    }
   }))
 }
 

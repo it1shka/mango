@@ -27,8 +27,23 @@
           </div>
           <template x-if="open">
             <template  x-for="collectionName in collections">
-              <div x-data="collection(collectionName)" class="collection">
-                <p x-text="name"></p>
+              <div 
+                x-data="collection(databaseName, collectionName)" 
+                @dblclick="renaming = true"
+                @keyup.enter="rename"
+                @click="$event.stopPropagation()"
+                @click.window="cancelRename"
+                class="collection"
+              >
+                <template x-if="!renaming">
+                  <p x-text="name"></p>
+                </template>
+                <template x-if="renaming">
+                  <input 
+                    x-model="newName" 
+                    autofocus placeholder="Collection name..."
+                  />
+                </template>
               </div>
             </template>
           </template>
