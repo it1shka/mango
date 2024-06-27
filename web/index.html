@@ -24,6 +24,7 @@
           <div class="header">
             <button x-text="open ? '-' : '+'" class="toggle" @click="toggle"></button>
             <p x-text="name"></p>
+            <button @click="drop" class="drop">Drop</button>
           </div>
           <template x-if="open">
             <template  x-for="collectionName in collections">

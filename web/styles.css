@@ -8,6 +8,59 @@ body {
   font-family: monospace;
 }
 
+.user-confirmation {
+  position: fixed;
+  z-index: 100;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-confirmation > h1 {
+  color: white;
+}
+
+.user-confirmation > .buttons {
+  padding: 1em 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-confirmation > .buttons > button + button { 
+  margin-left: 0.5em;
+}
+
+.user-confirmation > .buttons > button {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1.2em;
+  padding: 0.35em 1em;
+  border: none;
+  border-radius: 15px;
+  transition: 0.1s background-color ease-in-out;
+}
+
+.user-confirmation > .buttons > .yes {
+  background-color: #00ED64;
+}
+
+.user-confirmation > .buttons > .yes:hover {
+  background-color: #00ba4e;
+}
+
+.user-confirmation > .buttons > .no {
+  background-color: #e57373;
+}
+
+.user-confirmation > .buttons > .no:hover {
+  background-color: #dd4848;
+}
+
 .main-container {
   height: 100vh;
   display: grid;
@@ -85,6 +138,26 @@ body {
   color: #00684A;
   font-size: 1.2em;
   cursor: pointer;
+}
+
+.database > .header > .drop {
+  opacity: 0;
+  margin-left: auto;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 0.2em;
+  border-radius: 8px;
+  transition: 0.1s all ease-in-out;
+}
+
+.database > .header:hover > .drop {
+  display: initial;
+  opacity: 1;
+}
+
+.database > .header > .drop:hover {
+  background-color: #d32f2f;
 }
 
 .collection {

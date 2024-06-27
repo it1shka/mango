@@ -1,4 +1,5 @@
 const apiURL = relative => `http://localhost:3131/api/${relative}`
+
 const dispatch = (query, eventName, detail = {}) => {
   const element = document.body.querySelector(query)
   if (!element) {
@@ -9,6 +10,36 @@ const dispatch = (query, eventName, detail = {}) => {
     detail,
     bubbles: true
   }))
+}
+
+const getUserConfirmation = () => {
+  const widget = document.createElement('div')
+  widget.classList.add('user-confirmation')
+  const label = document.createElement('h1')
+  label.textContent = 'Are you sure?'
+  widget.appendChild(label)
+  const buttons = document.createElement('div')
+  buttons.classList.add('buttons')
+  const yes = document.createElement('button')
+  yes.textContent = 'yes'
+  yes.classList.add('yes')
+  buttons.appendChild(yes)
+  const no = document.createElement('button')
+  no.textContent = 'no'
+  no.classList.add('no')
+  buttons.appendChild(no)
+  widget.appendChild(buttons)
+  document.body.appendChild(widget)
+  return new Promise(resolve => {
+    yes.onclick = () => {
+      document.body.removeChild(widget)
+      resolve(true)
+    }
+    no.onclick = () => {
+      document.body.removeChild(widget)
+      resolve(false)
+    }
+  })
 }
 
 function main() {
@@ -88,6 +119,26 @@ function main() {
         dispatch('.navigation', 'error', `Failed to fetch collections for "${this.name}"`)
       }
     },
+
+    async drop() {
+      const confirmation = await getUserConfirmation()
+      if (!confirmation) return
+      try {
+        const response = await fetch(apiURL('database/delete'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ database: this.name }),
+        })
+        if (response.ok) {
+          dispatch('.navigation', 'database-update')
+        } else {
+          const message = await response.text()
+          dispatch('.navigation', 'error', message)
+        }
+      } catch {
+        dispatch('.navigation', 'error', 'Failed to drop database')
+      }
+    }
   }))
 
   Alpine.data('collection', (database, name) => ({
