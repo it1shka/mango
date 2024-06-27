@@ -94,7 +94,7 @@ body {
   transition: 0.1s all ease-in-out;
 }
 
-.collection:hover {
+.collection:hover, .collection.active {
   background-color: #eee;
   border-radius: 15px 0 0 15px;
   padding-left: 1em;

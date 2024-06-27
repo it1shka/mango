@@ -29,11 +29,12 @@
             <template  x-for="collectionName in collections">
               <div 
                 x-data="collection(databaseName, collectionName)" 
+                x-effect="active = ($store.chosen.database === database && $store.chosen.collection === name)"
                 @dblclick="renaming = true"
                 @keyup.enter="rename"
-                @click="$event.stopPropagation()"
+                @click="$event.stopPropagation(); $store.chosen.set(database, name)"
                 @click.window="cancelRename"
-                class="collection"
+                :class="{ active: active, collection: true }"
               >
                 <template x-if="!renaming">
                   <p x-text="name"></p>

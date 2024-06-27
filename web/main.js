@@ -12,6 +12,16 @@ const dispatch = (query, eventName, detail = {}) => {
 }
 
 function main() {
+  Alpine.store('chosen', {
+    database: null,
+    collection: null,
+
+    set(database, collection) {
+      this.database = database
+      this.collection = collection
+    }
+  })
+
   Alpine.data('connectionString', () => ({
     value: 'localhost',
 
@@ -83,6 +93,7 @@ function main() {
   Alpine.data('collection', (database, name) => ({
     database,
     name,
+    active: false,
     renaming: false,
     newName: name,
 
