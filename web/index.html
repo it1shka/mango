@@ -16,6 +16,7 @@
       <input x-model="value" placeholder="Connection string" />
       <button @click="connect">Connect</button>
       <button @click="$dispatch('database-update')">Refresh</button>
+      <button @click="createDatabase">New database</button>
     </header>
 
     <aside x-data="databases" @database-update.window="getList" class="navigation">

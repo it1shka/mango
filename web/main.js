@@ -42,6 +42,49 @@ const getUserConfirmation = () => {
   })
 }
 
+const promptUser = (label, fieldNames) => {
+  const widget = document.createElement('div')
+  widget.classList.add('prompt')
+  const form = document.createElement('form')
+  const title = document.createElement('h1')
+  title.classList.add('title')
+  title.textContent = label
+  form.appendChild(title)
+  const fields = {}
+  for (const fieldName of fieldNames) {
+    const input = document.createElement('input')
+    input.classList.add('field')
+    input.required = true
+    input.placeholder = fieldName.replace(/^./, e => e.toUpperCase())
+    form.appendChild(input)
+    fields[fieldName] = input
+  }
+  const button = document.createElement('button')
+  button.type = 'submit'
+  button.classList.add('submit')
+  button.textContent = 'Ok'
+  form.appendChild(button)
+  widget.appendChild(form)
+  document.body.appendChild(widget)
+  return new Promise((resolve, reject) => {
+    const close = () => document.body.removeChild(widget)
+    widget.onclick = () => {
+      close()
+      reject('closed')
+    }
+    form.onclick = event => event.stopPropagation()
+    form.onsubmit = event => {
+      event.preventDefault()
+      const fieldValues = {}
+      for (const [fieldName, fieldElem] of Object.entries(fields)) {
+        fieldValues[fieldName] = fieldElem.value
+      }
+      close()
+      resolve(fieldValues)
+    }
+  })
+}
+
 function main() {
   Alpine.store('chosen', {
     database: null,
@@ -73,6 +116,25 @@ function main() {
         dispatch('.controls', 'database-update')
       } catch {
         dispatch('.controls', 'error', 'Failed to connect to the MongoDB')
+      }
+    },
+
+    async createDatabase() {
+      try {
+        const data = await promptUser('New database', ['database', 'collection'])
+        const response = await fetch(apiURL('database/create'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        })
+        if (response.ok) {
+          dispatch('.controls', 'database-update')
+        } else {
+          dispatch('.controls', 'error', 'Failed to create database')
+        }
+      } catch (error) {
+        if (error === 'closed') return
+        dispatch('.constrols', 'error', 'Failed to create database')
       }
     },
   }))
