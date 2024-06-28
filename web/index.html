@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <main x-data class="main-container" @clear-chosen.window="$store.chosen.setNull">
+  <main x-data class="main-container" @clear-chosen.window="$store.chosen.setNull()">
 
     <header x-data="connectionString" class="controls" >
       <h2>Connect to: </h2>
@@ -27,7 +27,10 @@
           <div class="header">
             <button x-text="open ? '-' : '+'" class="toggle" @click="toggle"></button>
             <p x-text="name"></p>
-            <button @click="drop" class="drop">Drop</button>
+            <button 
+              @click="drop($store.chosen.database)" 
+              class="drop"
+            >Drop</button>
           </div>
           <template x-if="open">
             <template  x-for="collectionName in collections">

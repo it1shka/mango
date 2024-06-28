@@ -125,7 +125,7 @@ function main() {
       }
     },
 
-    async drop() {
+    async drop(chosenDatabase) {
       const confirmation = await getUserConfirmation()
       if (!confirmation) return
       try {
@@ -136,6 +136,9 @@ function main() {
         })
         if (response.ok) {
           dispatch('.navigation', 'database-update')
+          if (this.name === chosenDatabase) {
+            dispatch('.navigation', 'clear-chosen')
+          }
         } else {
           const message = await response.text()
           dispatch('.navigation', 'error', message)
@@ -193,14 +196,17 @@ function main() {
       const confirmed = await getUserConfirmation()
       if (!confirmed) return
       try {
-        const response = await fetch(apiURL('collection/delete', {
+        const response = await fetch(apiURL('collection/delete'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ database, collection }),
-        }))
+        })
         if (response.ok) {
           dispatch('.explorer', 'clear-chosen')
           dispatch('.explorer', 'database-update')
+        } else {
+          const message = await response.text()
+          dispatch('.explorer', 'error', message)
         }
       } catch {
         dispatch('.explorer', 'error', 'Failed to drop collection')
