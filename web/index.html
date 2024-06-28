@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <main class="main-container">
+  <main x-data class="main-container" @clear-chosen.window="$store.chosen.setNull">
 
     <header x-data="connectionString" class="controls" >
       <h2>Connect to: </h2>
@@ -19,6 +19,9 @@
     </header>
 
     <aside x-data="databases" @database-update.window="getList" class="navigation">
+      <template x-if="list.length <= 0">
+        <p class="no-results">No results</p>
+      </template>
       <template x-for="databaseName in list">
         <div x-data="database(databaseName)" class="database">
           <div class="header">
@@ -52,6 +55,29 @@
         </div>
       </template>
     </aside>
+
+    <div x-data="explorer" class="explorer">
+      <template x-if="!$store.chosen.database || !$store.chosen.collection">
+        <p class="no-results">Choose the collection</p>
+      </template>
+      <template x-if="$store.chosen.database && $store.chosen.collection">
+        <div class="header">
+          <div class="name" style="margin-right: 5em">
+            <h2 x-text="$store.chosen.collection"></h2>
+            <p>
+              <span>from</span>
+              <span x-text="$store.chosen.database"></span>
+            </p>
+          </div>
+          <button @click="insertDocument($store.chosen.database, $store.chosen.collection)" class="insert">
+            Insert
+          </button>
+          <button @click="dropCollection($store.chosen.database, $store.chosen.collection)" class="drop">
+            Drop
+          </button>
+        </div>
+      </template>
+    </div>
 
   </main>
 

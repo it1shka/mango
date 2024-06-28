@@ -45,6 +45,8 @@ def launch_web(client: Client) -> None:
         '''Serves index.html for route `/`'''
         return send_from_directory('web', 'index.html')
 
+    print(app.url_map)
+
     print('Browser will be open in 3 seconds')
     timer = Timer(BROWSER_DELAY, lambda: webbrowser.open_new(f'http://localhost:{PORT}/'))
     timer.start()

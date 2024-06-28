@@ -50,6 +50,11 @@ function main() {
     set(database, collection) {
       this.database = database
       this.collection = collection
+    },
+
+    setNull() {
+      this.database = null
+      this.collection = null
     }
   })
 
@@ -180,6 +185,30 @@ function main() {
     cancelRename() {
       this.newName = this.name
       this.renaming = false
+    }
+  }))
+
+  Alpine.data('explorer', () => ({
+    async dropCollection(database, collection) {
+      const confirmed = await getUserConfirmation()
+      if (!confirmed) return
+      try {
+        const response = await fetch(apiURL('collection/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ database, collection }),
+        }))
+        if (response.ok) {
+          dispatch('.explorer', 'clear-chosen')
+          dispatch('.explorer', 'database-update')
+        }
+      } catch {
+        dispatch('.explorer', 'error', 'Failed to drop collection')
+      }
+    },
+
+    async insertDocument(database, collection) {
+
     }
   }))
 }

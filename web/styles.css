@@ -112,6 +112,11 @@ body {
   grid-column: 1 / 2;
 }
 
+.navigation > .no-results {
+  text-align: center;
+  margin-top: 1em;
+}
+
 .database {
   margin-top: 0.25em;
 }
@@ -179,4 +184,42 @@ body {
   outline: none;
   background-color: transparent;
   color: #00684A;
+}
+
+.explorer {
+  display: flex;
+  flex-direction: column;
+  grid-row: 2 / 3;
+  grid-column: 2 / 3;
+}
+
+.explorer > .no-results {
+  align-self: center;
+  margin-top: 1em;
+}
+
+.explorer > .header {
+  padding: 0.5em 1em;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.explorer > .header > * + * {
+  margin-left: 0.5em;
+}
+
+.explorer > .header > button {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1.2em;
+  background-color: #00ED64;
+  padding: 0.35em 1em;
+  border: none;
+  border-radius: 15px;
+  transition: 0.1s background-color ease-in-out;
+}
+
+.explorer > .header > .drop {
+  background-color: #e57373;
 }
