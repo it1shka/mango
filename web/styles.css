@@ -8,15 +8,48 @@ body {
   font-family: monospace;
 }
 
-.prompt {
-  position: fixed;
-  top: 0; bottom: 0;
-  left: 0; right: 0;
+button {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1.2em;
+  background-color: #00ED64;
+  padding: 0.35em 1em;
+  border: none;
+  border-radius: 15px;
+  transition: 0.1s background-color ease-in-out;
 }
 
-/* TODO: ... */
+button:hover {
+  background-color: #00ba4e;
+}
 
-.user-confirmation {
+.prompt > form {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 1em 2em;
+}
+
+.prompt > form > * + * {
+  margin-top: 0.5em;
+}
+
+.prompt > form > input {
+  font-size: 1.2em;
+  padding: 0.25em 0.5em;
+  outline: none;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.prompt > form > button {
+  align-self: flex-start;
+  margin-top: 1em;
+  min-width: 75px;
+}
+
+.user-confirmation, .prompt {
   position: fixed;
   z-index: 100;
   top: 0; bottom: 0;
