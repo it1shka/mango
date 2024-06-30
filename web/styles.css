@@ -49,18 +49,20 @@ button {
     grid-column: 1 / 3;
     color: white;
     background-color: var(--primary-color);
+    box-shadow: var(--primary-color) 0px 1px 4px;
     display: flex;
     padding: 0 2em;
     align-items: center;
     & > * + * {
       margin-left: 1em;
     }
+    position: relative;
   }
 
   #navigation {
     grid-row: 2 / 3;
     grid-column: 1 / 2;
-
+    background-color: var(--dark-color);
   }
 
   #explorer {
