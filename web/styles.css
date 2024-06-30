@@ -94,7 +94,12 @@ button {
     }
 
     .collection {
-      
+      height: 40.5px;
+      padding-left: 4em;
+      &:hover, &.chosen {
+        background-color: #86b840;
+        padding-left: 6em;
+      }
     }
   }
 
