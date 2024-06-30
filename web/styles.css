@@ -69,6 +69,33 @@ button {
       padding: 1em;
       text-align: center;
     }
+
+    display: flex;
+    flex-direction: column;
+
+    .database, .collection {
+      font-size: 1.2em;
+      padding: 0.25em 0.5em;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.2s all ease-in-out;
+      transition-property: background-color, padding-left;
+      &:hover, &.chosen {
+        background-color: var(--primary-color);
+        padding-left: 2em;
+      }
+
+      button {
+        background-color: transparent;
+        color: var(--light-color);
+        width: 30px;
+      }
+    }
+
+    .collection {
+      
+    }
   }
 
   #explorer {
