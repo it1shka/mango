@@ -1,16 +1,18 @@
 import { computed } from 'vue'
 import Database from './Database.js'
-import store  from '../store.js'
+import NewDatabase from './NewDatabase.js'
+import store, { setChosen } from '../store.js'
 
 export default {
-  components: { Database },
+  components: { Database, NewDatabase },
   template: `
-    <aside id="navigation">
+    <aside @click="cancelChoice" id="navigation">
       <template v-if="connected">
         <Database 
           v-for="database in databases" 
           :name="database" 
         />
+        <NewDatabase />
       </template>
       <p v-else class="empty">Not connected</p>
     </aside>
@@ -18,6 +20,13 @@ export default {
   setup() {
     const connected = computed(() => store.connected)
     const databases = computed(() => store.databases)
-    return { connected, databases }
+    const cancelChoice = () => {
+      setChosen(null)
+    }
+    return { 
+      connected, 
+      databases,
+      cancelChoice,
+    }
   },
 }

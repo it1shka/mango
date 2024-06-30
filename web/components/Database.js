@@ -8,7 +8,7 @@ export default {
   template: `
     <div 
       :class="{ chosen: isChosen, database: true }" 
-      @click="choose"
+      @click.stop="choose"
     >
       <button 
         v-text="open ? '-' : '+'"

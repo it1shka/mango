@@ -4,7 +4,7 @@ import store, { setChosen } from '../store.js'
 export default {
   template: `
     <div 
-      @click="choose"
+      @click.stop="choose"
       :class="{ chosen: isChosen, collection: true }"
     >
       <p>{{ name }}</p>
