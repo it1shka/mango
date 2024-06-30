@@ -63,6 +63,12 @@ button {
     grid-row: 2 / 3;
     grid-column: 1 / 2;
     background-color: var(--dark-color);
+    color: white;
+
+    .empty {
+      padding: 1em;
+      text-align: center;
+    }
   }
 
   #explorer {
