@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { addNotification, addDatabase } from '../store.js'
+import { addNotification, refreshDatabases } from '../store.js'
 import { apiURL } from '../lib.js'
 
 export default {
@@ -57,18 +57,17 @@ export default {
             collection: collectionName.value,
           })
         })
-        if (response.ok) {
-          addDatabase(databaseName.value)
-          databaseName.value = ''
-          collectionName.value = ''
-          closePanel()
-        } else {
-          const message = await response.text()
+        if (!response.ok) {
           addNotification({
             kind: 'error',
-            message,
+            message: await response.text(),
           })
+          return
         }
+        databaseName.value = ''
+        collectionName.value = ''
+        refreshDatabases()
+        closePanel()
       } catch {
         addNotification({
           kind: 'error',
