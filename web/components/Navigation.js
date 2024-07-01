@@ -10,6 +10,7 @@ export default {
       <template v-if="connected">
         <Database 
           v-for="database in databases" 
+          :key="database"
           :name="database" 
         />
         <NewDatabase />

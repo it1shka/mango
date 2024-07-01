@@ -21,11 +21,13 @@ export default {
         >
           <h1 class="label">New database:</h1>
           <input 
+            required
             v-model="databaseName"
             type="text"
             placeholder="Database name: "
           />
           <input 
+            required
             v-model="collectionName"
             type="text"
             placeholder="Collection name: "

@@ -7,7 +7,7 @@ export default {
       @click.stop="choose"
       :class="{ chosen: isChosen, collection: true }"
     >
-      <p>{{ name }}</p>
+      <p v-text="name"></p>
     </div>
   `,
   props: ['database', 'name'],

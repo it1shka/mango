@@ -16,7 +16,9 @@ export default {
       <p>{{ name }}</p>
     </div>
     <template v-if="open">
-      <Collection v-for="collection in collections"
+      <Collection 
+        v-for="collection in collections"
+        :key="collection"
         :name="collection"
         :database="name"
       />

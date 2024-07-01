@@ -1,10 +1,11 @@
 import { computed } from 'vue'
 import store, { addNotification, refreshDatabases, setChosen } from '../store.js'
 import Drop from './Drop.js'
+import NewCollection from './NewCollection.js'
 import {apiURL} from '../lib.js'
 
 export default {
-  components: { Drop },
+  components: { Drop, NewCollection },
   template: `
     <div id="explorer">
       <div class="general-info">
@@ -17,7 +18,7 @@ export default {
           <p>Database</p>
         </div>
         <div class="actions">
-          <button>New Collection</button>
+          <NewCollection :database="database"/>
           <Drop @accepted-drop="drop" />
         </div>
       </div>
