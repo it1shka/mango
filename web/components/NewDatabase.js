@@ -1,6 +1,6 @@
 import { ref } from 'vue'
-
-// TODO: finish
+import { addNotification, addDatabase } from '../store.js'
+import { apiURL } from '../lib.js'
 
 export default {
   template: `
@@ -18,7 +18,18 @@ export default {
         @click.stop
         class="creation-form"
       >
-
+        <h1>New database:</h1>
+        <input 
+          v-model="databaseName"
+          type="text"
+          placeholder="Database name: "
+        />
+        <input 
+          v-model="collectionName"
+          type="text"
+          placeholder="Collection name: "
+        />
+        <button type="submit">Create</button>
       </form>
     </aside>
   `,
@@ -33,12 +44,43 @@ export default {
       open.value = false
     }
 
-    const submit = () => {
+    const databaseName = ref('')
+    const collectionName = ref('')
 
+    const submit = async () => {
+      try {
+        const response = await fetch(apiURL('database/create'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            database: databaseName.value,
+            collection: collectionName.value,
+          })
+        })
+        if (response.ok) {
+          addDatabase(databaseName.value)
+          databaseName.value = ''
+          collectionName.value = ''
+          closePanel()
+        } else {
+          const message = await response.text()
+          addNotification({
+            kind: 'error',
+            message,
+          })
+        }
+      } catch {
+        addNotification({
+          kind: 'error',
+          message: 'Failed to create database',
+        })
+      }
     }
 
     return {
       open,
+      databaseName,
+      collectionName,
       openPanel,
       closePanel,
       submit,

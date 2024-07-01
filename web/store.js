@@ -27,4 +27,8 @@ export const setDatabases = (value) => {
   store.databases = value
 }
 
+export const addDatabase = (value) => {
+  store.databases.push(value)
+}
+
 export default store
