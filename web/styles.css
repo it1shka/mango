@@ -118,6 +118,31 @@ button {
       place-items: center;
       color: grey;
     }
+
+    .general-info {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+
+      p {
+        color: grey;
+      }
+
+      img {
+        height: 30px;
+        width: auto;
+        margin: 1em;
+      }
+
+      .actions {
+        margin-left: auto;
+        display: flex;
+        padding: 0 1em;
+        & > * + * {
+          margin-left: 0.5em;
+        }
+      }
+    }
   }
 }
 
@@ -132,13 +157,23 @@ button {
   align-items: center;
   justify-content: center;
 
-  .creation-form {
+  .inner-container {
     display: flex;
     font-size: 1.2em;
     flex-direction: column;
     align-items: center;
     & > * + * {
       margin-top: 0.5em;
+    }
+  }
+
+  .label {
+    color: white;
+  }
+
+  .buttons {
+    & > * + * {
+      margin-left: 1em;
     }
   }
 }

@@ -5,33 +5,35 @@ import { apiURL } from '../lib.js'
 export default {
   template: `
     <button 
-      @click="openPanel" 
+      @click.stop="openPanel" 
       id="new-database"
     >New</button>
-    <aside 
-      v-if="open" 
-      @click="closePanel"
-      class="fullscreen-panel"
-    >
-      <form 
-        @submit.prevent="submit"
-        @click.stop
-        class="creation-form"
+    <Teleport to="body">
+      <aside 
+        v-if="open" 
+        @click.stop="closePanel"
+        class="fullscreen-panel"
       >
-        <h1>New database:</h1>
-        <input 
-          v-model="databaseName"
-          type="text"
-          placeholder="Database name: "
-        />
-        <input 
-          v-model="collectionName"
-          type="text"
-          placeholder="Collection name: "
-        />
-        <button type="submit">Create</button>
-      </form>
-    </aside>
+        <form 
+          @submit.prevent="submit"
+          @click.stop
+          class="inner-container"
+        >
+          <h1 class="label">New database:</h1>
+          <input 
+            v-model="databaseName"
+            type="text"
+            placeholder="Database name: "
+          />
+          <input 
+            v-model="collectionName"
+            type="text"
+            placeholder="Collection name: "
+          />
+          <button type="submit">Create</button>
+        </form>
+      </aside>
+    </Teleport>
   `,
   setup() {
     const open = ref(false)
