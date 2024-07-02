@@ -16,6 +16,9 @@ export const setChosen = (value) => {
 }
 
 export const addNotification = (notification) => {
+  if (notification.kind === 'error') {
+    console.error(notification.message)
+  }
   store.notifications.push(notification)
 }
 

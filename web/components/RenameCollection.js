@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
-import store, { addNotification } from '../store.js'
+import store, { addNotification, fetchCollections, setChosen } from '../store.js'
+import {apiURL} from '../lib.js'
 
 export default {
   template: `
@@ -40,7 +41,28 @@ export default {
 
     const submit = async () => {
       try {
-        
+        const response = await fetch(apiURL('collection/rename'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            database: database.value,
+            collection: collection.value,
+            name: newName.value,
+          })
+        })
+        if (!response.ok) {
+          addNotification({
+            kind: 'error',
+            message: await response.text(),
+          })
+          return
+        }
+        fetchCollections(database.value)
+        setChosen({
+          database: database.value,
+          collection: newName.value
+        })
+        close()
       } catch {
         addNotification({
           kind: 'error',
