@@ -18,13 +18,14 @@ export default {
           <p>Database</p>
         </div>
         <div class="actions">
-          <NewCollection :database="database"/>
+          <NewCollection />
           <Drop @accepted-drop="drop" />
         </div>
       </div>
       <div class="collections-grid">
         <div 
           v-for="collection in collections"
+          :key="collection"
           @click="setChosen({ database, collection })"
           class="collection-element"
         >

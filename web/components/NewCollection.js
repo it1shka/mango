@@ -1,5 +1,5 @@
-import { ref, toRef } from 'vue'
-import { addNotification, fetchCollections } from '../store.js'
+import { ref, computed } from 'vue'
+import store, { addNotification, fetchCollections } from '../store.js'
 import { apiURL } from '../lib.js'
 
 export default {
@@ -30,9 +30,8 @@ export default {
       </aside>
     </Teleport>
   `,
-  props: ['database'],
-  setup(props) {
-    const database = toRef(props, 'database')
+  setup() {
+    const database = computed(() => store.chosen.database)
 
     const isOpen = ref(false)
     const collectionName = ref('')
