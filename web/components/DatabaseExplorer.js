@@ -1,5 +1,5 @@
-import { computed } from 'vue'
-import store, { addNotification, refreshDatabases, setChosen } from '../store.js'
+import { computed, onMounted, onUpdated } from 'vue'
+import store, { addNotification, fetchCollections, refreshDatabases, setChosen } from '../store.js'
 import Drop from './Drop.js'
 import NewCollection from './NewCollection.js'
 import {apiURL} from '../lib.js'
@@ -22,10 +22,24 @@ export default {
           <Drop @accepted-drop="drop" />
         </div>
       </div>
+      <div class="collections-grid">
+        <div 
+          v-for="collection in collections"
+          @click="setChosen({ database, collection })"
+          class="collection-element"
+        >
+          <img alt="collection" src="/images/collection.png" />
+          <p>{{ collection }}</p>
+        </div>
+      </div>
     </div>
   `,
   setup() {
+    const prefetch = () => { fetchCollections(store.chosen.database) }
+    onMounted(prefetch); onUpdated(prefetch)
+
     const database = computed(() => store.chosen.database)
+    const collections = computed(() => store.collections[store.chosen.database])
 
     const drop = async () => {
       try {
@@ -55,7 +69,9 @@ export default {
 
     return {
       database,
+      collections,
       drop,
+      setChosen,
     }
   },
 }

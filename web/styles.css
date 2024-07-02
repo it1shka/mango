@@ -143,6 +143,36 @@ button {
         }
       }
     }
+
+    .collections-grid {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 1em;
+
+      .collection-element {
+        display: flex;
+        & > * + * {
+          margin-left: 0.5em;
+        }
+        align-items: center;
+        cursor: pointer;
+        margin: 0.5em;
+        padding: 0.5em 1em;
+        color: white;
+        background-color: var(--primary-color);
+        transition: 0.1s all ease-in-out;
+        transition-property: scale, background-color, translate;
+        &:hover {
+          scale: 1.1;
+          translate: 0 -5px;
+          background-color: var(--dark-color);
+        }
+        img {
+          height: 30px;
+          width: auto;
+        }
+      }
+    }
   }
 }
 
