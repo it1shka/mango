@@ -1,4 +1,4 @@
-import { computed, onMounted, onUpdated } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import store, { addNotification, fetchCollections, refreshDatabases, setChosen } from '../store.js'
 import Drop from './Drop.js'
 import NewCollection from './NewCollection.js'
@@ -36,11 +36,12 @@ export default {
     </div>
   `,
   setup() {
-    const prefetch = () => { fetchCollections(store.chosen.database) }
-    onMounted(prefetch); onUpdated(prefetch)
-
     const database = computed(() => store.chosen.database)
     const collections = computed(() => store.collections[store.chosen.database])
+
+    const updateCollections = () => { fetchCollections(store.chosen.database) }
+    onMounted(updateCollections)
+    watch(database, updateCollections)
 
     const drop = async () => {
       try {

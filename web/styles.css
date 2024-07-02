@@ -182,8 +182,6 @@ button {
   }
 }
 
-/* TODO: */
-
 .fullscreen-panel {
   position: fixed;
   top: 0; bottom: 0;
@@ -212,4 +210,8 @@ button {
       margin-left: 1em;
     }
   }
+}
+
+.CodeMirror {
+  border-radius: 8px;
 }

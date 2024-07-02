@@ -93,6 +93,20 @@ def create_api(client: Client) -> Flask:
             return 'Failed to rename collection', 500
         return 'Successfully renamed collection'
 
+    @app.route('/api/document/create', methods=['POST'])
+    def handle_document_create() -> Any:
+        body = request.get_json()
+        required_fields = ['database', 'collection', 'document']
+        if any(map(lambda field: field not in body, required_fields)):
+            return 'Some of the fields are missing', 400
+        database = body['database']
+        collection = body['collection']
+        document = body['document']
+        verdict = client.new_document(database, collection, document)
+        if not verdict:
+            return 'Failed to create document', 500
+        return 'Successfully created document'
+
     # TODO: finish the API
 
     return app
