@@ -1,4 +1,4 @@
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import store, {addNotification} from '../store.js'
 import Document from './Document.js'
 import {apiURL} from '../lib.js'
@@ -87,7 +87,9 @@ export default {
     }
 
     onMounted(fetchDocuments)
-    watch([store.chosen, page], fetchDocuments)
+    watch(page, fetchDocuments)
+    const chosen = computed(() => store.chosen)
+    watch(chosen, fetchDocuments)
     const timer = ref(null)
     watch(search, () => {
       clearTimeout(timer.value)
