@@ -2,6 +2,7 @@ from __future__ import annotations
 from flask import Flask, request
 from .client import Client
 from typing import Any
+from bson import json_util
 
 
 def create_api(client: Client) -> Flask:
@@ -106,6 +107,24 @@ def create_api(client: Client) -> Flask:
         if not verdict:
             return 'Failed to create document', 500
         return 'Successfully created document'
+
+    @app.route('/api/document/list', methods=["GET"])
+    def handle_document_list() -> Any:
+        args = request.args
+        if 'database' not in args or 'collection' not in args:
+            return 'Some of the fields are missing', 400
+        database = args['database']
+        collection = args['collection']
+        query = '{}'
+        if 'query' in args:
+            query = args['query']
+        page = 0
+        if 'page' in args:
+            page = int(args['page'])
+        result = client.get_page(database, collection, query, page)
+        if result is None:
+            return 'Failed to fetch documents', 500
+        return json_util.dumps(result)
 
     # TODO: finish the API
 

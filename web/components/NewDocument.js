@@ -1,5 +1,5 @@
-import { ref, computed, watch } from 'vue'
-import store, { addNotification } from '../store.js'
+import { ref, computed, watch, nextTick } from 'vue'
+import store, { addNotification, setChosen } from '../store.js'
 import {apiURL} from '../lib.js'
 
 export default {
@@ -45,6 +45,15 @@ export default {
     const database = computed(() => store.chosen.database)
     const collection = computed(() => store.chosen.collection)
 
+    // TODO: fix for a better option
+    const forceUpdate = () => {
+      const current = store.chosen
+      setChosen(null)
+      nextTick(() => {
+        setChosen(current)
+      })
+    }
+
     const submit = async () => {
       try {
         const response = await fetch(apiURL('document/create'), {
@@ -63,12 +72,11 @@ export default {
           })
           return
         }
-        // TODO:
-        // TODO:
         addNotification({
           kind: 'success',
           message: 'Document was successfully created',
         })
+        forceUpdate()
         close()
       } catch {
         addNotification({

@@ -3,10 +3,16 @@ import store, { setChosen, addNotification, fetchCollections, refreshDatabases }
 import Drop from './Drop.js'
 import RenameCollection from './RenameCollection.js'
 import NewDocument from './NewDocument.js'
+import DocumentViewer from './DocumentViewer.js'
 import {apiURL} from '../lib.js'
 
 export default {
-  components: { Drop, RenameCollection, NewDocument },
+  components: { 
+    Drop, 
+    RenameCollection, 
+    NewDocument,
+    DocumentViewer,
+  },
   template: `
     <div id="explorer">
       <div class="general-info">
@@ -29,6 +35,7 @@ export default {
           <Drop @accepted-drop="drop" />
         </div>
       </div> 
+      <DocumentViewer />
     </div>
   `,
   setup() {
