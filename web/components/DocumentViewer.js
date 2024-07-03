@@ -17,7 +17,7 @@ export default {
         <h3>Page: {{ page }}</h3>
         <button @click="nextPage">Next</button>
       </div>
-      <div class="document-grid">
+      <div class="collections-grid">
         <template v-if="documents?.length > 0">
           <Document 
             v-for="document in documents"
