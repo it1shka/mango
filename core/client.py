@@ -3,7 +3,6 @@ import pymongo
 import json
 from bson import ObjectId
 
-
 CONNECTION_TIMEOUT = 2000
 PAGE_SIZE = 5
 
@@ -156,6 +155,23 @@ class Client:
             print('Search failed')
             return None
 
+    def get_page_general(self, db: str, col: str, search: str, \
+        page: int, page_size: int) -> list | None:
+        '''
+        Used for Web API. 
+        Copypaste of the `get_page` function.
+        '''
+        try:
+            cursor = self.get_cursor(db, col, search)
+            cursor = cursor.skip(page_size * page).limit(page_size)
+            documents = []
+            for document in cursor:
+                documents.append(document)
+            return documents
+        except Exception:
+            print('Search failed')
+            return None
+
     def new_document(self, db: str, col: str, doc: str) -> bool:
         '''Inserts a new document'''
         try:
@@ -193,4 +209,22 @@ class Client:
             return True
         except Exception:
             print('Failed to change document')
+            return False
+
+    def edit_document_general(self, db: str, col: str, _id: str, \
+        new_value: str) -> bool:
+        '''Function used with Web API'''
+        try:
+            database = self._client[db]
+            collection = database.get_collection(col)
+            new_document = json.loads(new_value)
+            new_document['_id'] = ObjectId(_id)
+            collection.update_one(
+                {'_id': ObjectId(_id)},
+                {'$set': new_document},
+                upsert=False
+            )
+            return True
+        except Exception:
+            print('Failed to edit document')
             return False

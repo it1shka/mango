@@ -108,7 +108,7 @@ def create_api(client: Client) -> Flask:
             return 'Failed to create document', 500
         return 'Successfully created document'
 
-    @app.route('/api/document/list', methods=["GET"])
+    @app.route('/api/document/list', methods=['GET'])
     def handle_document_list() -> Any:
         args = request.args
         if 'database' not in args or 'collection' not in args:
@@ -121,11 +121,38 @@ def create_api(client: Client) -> Flask:
         page = 0
         if 'page' in args:
             page = int(args['page'])
-        result = client.get_page(database, collection, query, page)
+        result = client.get_page_general(database, collection, query, page, 40)
         if result is None:
             return 'Failed to fetch documents', 500
         return json_util.dumps(result)
 
-    # TODO: finish the API
+    @app.route('/api/document/edit', methods=['POST'])
+    def handle_document_edit() -> Any:
+        required_fields = ['database', 'collection', 'id', 'value']
+        body = request.get_json()
+        if any(map(lambda field: field not in body, required_fields)):
+            return 'Some fields are missing', 400
+        database = body['database']
+        collection = body['collection']
+        _id = body['id']
+        new_value = body['value']
+        verdict = client.edit_document_general(database, collection, _id, new_value)
+        if not verdict:
+            return 'Failed to edit document', 500
+        return 'Successfully updated the document'
+
+    @app.route('/api/document/delete', methods=['POST'])
+    def handle_document_delete() -> Any:
+        required_fields = ['database', 'collection', 'id']
+        body = request.get_json()
+        if any(map(lambda field: field not in body, required_fields)):
+            return 'Some fields are missing', 400
+        database = body['database']
+        collection = body['collection']
+        _id = body['id']
+        verdict = client.delete_document(database, collection, _id)
+        if not verdict:
+            return 'Failed to delete the document', 500
+        return 'Successfully deleted the document'
 
     return app

@@ -1,5 +1,6 @@
-import { ref, toRef, watch, computed } from 'vue'
-import {identifyDocument} from '../lib.js'
+import { ref, toRef, watch, computed, nextTick } from 'vue'
+import {apiURL, identifyDocument} from '../lib.js'
+import store, { setChosen, addNotification } from '../store.js'
 
 export default {
   template: `
@@ -23,8 +24,10 @@ export default {
         >
           <h1 class="label">Edit document:</h1>
           <textarea ref="editorRef">{{ json }}</textarea>
-          <!-- TODO: add delete button -->
-          <button type="submit">Edit</button>
+          <div class="buttons">
+            <button type="submit">Edit</button>
+            <button @click.prevent="drop">Delete</button>
+          </div>
         </form>
       </aside>
     </Teleport>
@@ -62,12 +65,74 @@ export default {
       })
     })
 
-    // TODO: 
-    const submit = () => {
+    // again, this is just a hack
+    const forceUpdate = () => {
+      const current = store.chosen
+      setChosen(null)
+      nextTick(() => {
+        setChosen(current)
+      })
+    }
+
+    const database = computed(() => store.chosen.database)
+    const collection = computed(() => store.chosen.collection)
+
+    const submit = async () => {
       try {
-
+        const id = jsonWithId.value._id.$oid
+        const response = await fetch(apiURL('document/edit'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            database: database.value,
+            collection: collection.value,
+            id,
+            value: editorValue.value
+          })
+        })
+        if (!response.ok) {
+          addNotification({
+            kind: 'error',
+            message: await response.text(),
+          })
+          return
+        }
+        forceUpdate()
+        close()
       } catch {
+        addNotification({
+          kind: 'error',
+          message: 'Failed to update document',
+        })
+      }
+    }
 
+    const drop = async () => {
+      try {
+        const id = jsonWithId.value._id.$oid
+        const response = await fetch(apiURL('document/delete'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            database: database.value,
+            collection: collection.value,
+            id
+          })
+        })
+        if (!response.ok) {
+          addNotification({
+            kind: 'error',
+            message: await response.text(),
+          })
+          return
+        }
+        forceUpdate()
+        close()
+      } catch {
+        addNotification({
+          kind: 'error',
+          message: 'Failed to delete document'
+        })
       }
     }
 
@@ -79,6 +144,7 @@ export default {
       open,
       close,
       submit,
+      drop,
     }
   },
 }
