@@ -29,3 +29,9 @@ export const identifyDocument = doc => {
   }
   return 'Document'
 }
+
+export const sleep = time => {
+  return new Promise(resolve => {
+    setTimeout(resolve, time)
+  })
+}

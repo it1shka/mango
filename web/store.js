@@ -19,11 +19,15 @@ export const addNotification = (notification) => {
   if (notification.kind === 'error') {
     console.error(notification.message)
   }
-  store.notifications.push(notification)
+  store.notifications = [
+    ...store.notifications, 
+    notification,
+  ]
 }
 
 export const popNotification = () => {
-  return store.notification.shift()
+  const [_, ...tail] = store.notifications
+  store.notifications = tail
 }
 
 export const fetchCollections = async (database) => {
@@ -41,10 +45,10 @@ export const fetchCollections = async (database) => {
     }
     store.collections[database] = await response.json()
   } catch {
-    collections.value = []
+    store.collections[database] = []
     addNotification({
       kind: 'error',
-      message: `Failed to fetch collections for "${name}"`
+      message: `Failed to fetch collections for "${database}"`
     })
   }
 }

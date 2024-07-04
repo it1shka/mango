@@ -12,6 +12,36 @@ body {
   --dark-color: #023430;
 }
 
+@keyframes notification {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.notification {
+  position: fixed;
+  z-index: 1000;
+  background-color: white;
+  bottom: 0; right: 0;
+  padding: 0.5em 1em;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  display: flex;
+  align-items: center;
+  & > * + * {
+    margin-left: 0.5em;
+  }
+  img {
+    height: 25px;
+    width: auto;
+  }
+  animation: notification 0.5s ease-in-out;
+}
+
 input {
   font-family: inherit;
   border: 5px solid var(--light-color);
