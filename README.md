@@ -16,11 +16,11 @@ browser interface using Vue.js
 <img width="1440" alt="Screenshot 2024-07-04 at 15 15 35" src="https://github.com/it1shka/mango/assets/58363010/8691120c-b172-4228-9a81-9e6040eef924">
 
 ### How to use
-> Download application from GitHub
-> make _dev.sh_ executable (_chmod +x dev.sh_)
-> run _./dev.sh init_ (it creates python environment and installs dependencies)
-> run _./dev.sh start web_ to run the web version (preferred)
-> run _./dev.sh start native_ to run Tkinter version (ugly)
+1. Download application from GitHub
+2. make _dev.sh_ executable (_chmod +x dev.sh_)
+3. run _./dev.sh init_ (it creates python environment and installs dependencies)
+4. run _./dev.sh start web_ to run the web version (preferred)
+5. run _./dev.sh start native_ to run Tkinter version (ugly)
 All in all, the setup script is similar to:
 ```shell
 git clone https://github.com/it1shka/mango
